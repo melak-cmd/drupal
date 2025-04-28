@@ -1,0 +1,12 @@
+version: '3.4'
+services:
+  planttext-server:
+    image: plantuml/plantuml-server:jetty
+    container_name: planttext-server
+    ports:
+      - "8080:8080"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: '1024M'

@@ -1,0 +1,39 @@
+@startuml
+' convert it with additional command line argument -DRELATIVE_INCLUDE="./.." to use locally
+!if %variable_exists("RELATIVE_INCLUDE")
+  !include %get_variable_value("RELATIVE_INCLUDE")/C4_Deployment.puml
+!else
+  !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Deployment.puml
+  !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+!endif
+
+AddElementTag("fallback", $bgColor="#c0c0c0")
+AddRelTag("fallback", $textColor="#c0c0c0", $lineColor="#438DD5")
+AddElementTag("storage", $shape=RoundedBoxShape())
+
+WithoutPropertyHeader()
+
+' LAYOUT_WITH_LEGEND()
+
+title Diagram Devance
+Deployment_Node(plc, "Devance", "Group Devance", "Payement, Fodelité, ...etc"){
+    AddProperty("Location", "OVH")
+    AddProperty("Support", "Deprecated")
+    Deployment_Node_L(dev, "Devance-Dev***\tx1", "Debian 8", "A web server located in the OVH data center, accessible via a VPN."){
+        AddProperty("Java Version", "7")
+        AddProperty("Xmx", "2Gi")
+        AddProperty("Xms", "2Gi")
+        Deployment_Node_L(apache, "Apache Tomcat", "Apache Tomcat 6.x", "An open source Java EE web server."){
+            Component(ap, "HTTP Server", "Apache", "Provides Internet functionality via a JSON/HTTPS API.")
+            Component(gf, "GlassFish", "Application server ", "Deploying Java-based EAR applications")
+        }
+        Deployment_Node_L(webdav, "Remote web servers", "Web Distributed Authoring and Versioning x.x", "Allows customer to edit and manage files on remote web servers."){
+            Component(wd, "WebDav", "HTTP", "File Management, Versioning..etc")
+        }
+        ComponentDb(db, "MySQL", "Database", "", $tags="fallback")
+        Component(fileStorage, "File storage", "Images", $tags="storage")
+
+    }
+   
+
+@enduml
